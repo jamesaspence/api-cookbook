@@ -6,6 +6,7 @@ import cors from '@koa/cors';
 import router from './http/routes';
 import { boot } from './boot';
 import { AppContext } from './types';
+import helmet from 'koa-helmet';
 
 config();
 
@@ -49,6 +50,8 @@ boot().then(() => {
       ctx.app.emit('error', err, ctx);
     });
   });
+
+  app.use(helmet());
 
   app.use(bodyParser());
   app.use(cors());
