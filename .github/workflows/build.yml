@@ -1,0 +1,22 @@
+name: Build
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.12.1
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - run: yarn lint:check
+      - run: yarn format:check
+      - run: yarn build:clean
+      - run: yarn build:ci
+      - run: yarn test:ci
