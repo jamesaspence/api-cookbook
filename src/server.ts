@@ -5,7 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import router from './http/routes';
 import { boot } from './boot';
-import { AppContext } from '../types';
+import { AppContext } from './types';
 
 config();
 

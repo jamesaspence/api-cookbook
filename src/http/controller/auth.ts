@@ -1,4 +1,4 @@
-import { AppContext, AppMiddleware } from '../../../types';
+import { AppContext, AppMiddleware } from '../../types';
 import { generateHash, validateHash } from '../../service/hash';
 import { generateJwt } from '../../service/jwt';
 import { getPrismaClient } from '../../boot/db';
