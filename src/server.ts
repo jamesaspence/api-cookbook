@@ -1,6 +1,9 @@
 import { config } from 'dotenv';
 import Application from 'koa';
 import winston from 'winston';
+import bodyParser from 'koa-bodyparser';
+import cors from '@koa/cors';
+import router from './http/routes';
 
 config();
 
@@ -25,11 +28,11 @@ export const logger = winston.createLogger({
 
 export const app = new Application();
 
-app.use(ctx => {
-  ctx.body = {
-    name: 'Cookbook API',
-  };
-});
+app.use(bodyParser());
+app.use(cors());
+
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 app.listen(port, () => {
   logger.debug(`Server listening at port ${port}`);
