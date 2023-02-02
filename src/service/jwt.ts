@@ -1,9 +1,12 @@
-import * as jwt from 'jsonwebtoken';
-import { SignOptions } from 'jsonwebtoken';
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 import { User } from '@prisma/client';
 
 const defaultOptions: SignOptions = {
   expiresIn: '1d',
+};
+
+type DecodedToken = JwtPayload & {
+  sub: number;
 };
 
 export const generateJwt = (user: User, options: SignOptions = {}): string => {
@@ -15,3 +18,6 @@ export const generateJwt = (user: User, options: SignOptions = {}): string => {
     subject: id.toString(),
   });
 };
+
+export const decodeJwt = (rawToken: string): DecodedToken =>
+  jwt.verify(rawToken, process.env.APP_SECRET as string) as DecodedToken;
