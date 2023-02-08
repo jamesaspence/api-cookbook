@@ -8,7 +8,7 @@ type CommandOutput = {
   stderr: string | Buffer;
 };
 
-export const initializeMigrations = async (): Promise<CommandOutput> => {
+export const setupDatabase = async (): Promise<CommandOutput> => {
   await connectToDB();
 
   return new Promise<CommandOutput>((resolve, reject) => {
