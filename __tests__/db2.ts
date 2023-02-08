@@ -1,9 +1,9 @@
-import { resetDatabase } from './__utils__/database';
-import { connectToDB, getPrismaClient } from '../src/boot/db';
+import { resetDatabase, setupDatabase } from './__utils__/database';
+import { getPrismaClient } from '../src/boot/db';
 import { User } from '@prisma/client';
 
 beforeAll(async () => {
-  await connectToDB();
+  await setupDatabase();
 });
 
 afterEach(async () => {
