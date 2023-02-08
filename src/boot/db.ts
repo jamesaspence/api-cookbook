@@ -3,7 +3,13 @@ import { PrismaClient } from '@prisma/client';
 let prisma: PrismaClient;
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export const connectToDB = async (): Promise<PrismaClient> => {
+export const connectToDB = async (reset = false): Promise<PrismaClient> => {
+  if (prisma && !reset) {
+    return getPrismaClient();
+  } else if (prisma) {
+    await prisma.$disconnect();
+  }
+
   prisma = new PrismaClient();
 
   return getPrismaClient();
