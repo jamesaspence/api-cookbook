@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 import { setupDatabase, resetDatabase } from './__utils__/database';
 
 beforeAll(async () => {
-  await setupDatabase();
+  await connectToDB();
 });
 
 afterEach(async () => {

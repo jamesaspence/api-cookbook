@@ -8,10 +8,18 @@ type CommandOutput = {
   stderr: string | Buffer;
 };
 
-export const setupDatabase = async (): Promise<CommandOutput> => {
+let migrationsRun = false;
+
+export const setupDatabase = async (
+  forceRun = false
+): Promise<CommandOutput | void> => {
   await connectToDB();
 
-  return new Promise<CommandOutput>((resolve, reject) => {
+  return new Promise<CommandOutput | void>((resolve, reject) => {
+    if (migrationsRun && !forceRun) {
+      resolve();
+    }
+
     const rootPath = `${__dirname}/../../`;
 
     const command = `cd ${rootPath} && DB_URL=${process.env.DB_URL} yarn prisma migrate reset --force`;
@@ -24,11 +32,8 @@ export const setupDatabase = async (): Promise<CommandOutput> => {
         });
       }
 
-      resolve({
-        error,
-        stdout,
-        stderr,
-      });
+      migrationsRun = true;
+      resolve();
     });
   });
 };
