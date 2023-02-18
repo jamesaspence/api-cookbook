@@ -47,6 +47,7 @@
     "build": "yarn tsc --build",
     "build:ci": "yarn tsc --noEmit",
     "build:clean": "yarn build --clean",
+    "dev": "yarn start",
     "format": "yarn prettier --write src",
     "format:check": "yarn prettier -c src",
     "lint": "yarn eslint src --fix --ext .ts",
