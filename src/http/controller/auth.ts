@@ -5,6 +5,7 @@ import { getPrismaClient } from '../../boot/db';
 import { User } from '@prisma/client';
 
 const mapUserToResponse = (user: User): object => ({
+  id: user.id,
   email: user.email,
   first_name: user.first_name,
   last_name: user.last_name,
