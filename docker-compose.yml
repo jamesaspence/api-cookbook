@@ -1,15 +1,27 @@
 version: '3.9'
 services:
-  postgres:
+  db:
     image: postgres:14.6
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - soundbridge-db:/var/lib/postgresql/data
+      - dev-db:/var/lib/postgresql/data
     ports:
       - ${DB_PORT:-5432}:5432
+  testDB:
+    image: postgres:14.6
+    environment:
+      POSTGRES_DB: ${TEST_DB_NAME:-test}
+      POSTGRES_USER: ${TEST_DB_USER:-test}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:-secret}
+    volumes:
+      - test-db:/var/lib/postgresql/data
+    ports:
+      - ${TEST_DB_PORT:-55432}:5432
 volumes:
-  soundbridge-db:
+  dev-db:
+    driver: local
+  test-db:
     driver: local

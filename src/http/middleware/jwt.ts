@@ -2,6 +2,7 @@ import { AppContext, AppMiddleware } from '../../types';
 import { Next } from 'koa';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getPrismaClient } from '../../boot/db';
+import { decodeJwt } from '../../service/jwt';
 
 type DecodedToken = JwtPayload & {
   sub: number;
@@ -40,11 +41,8 @@ export const jwtAuth: AppMiddleware = async (
 
   let decodedToken: DecodedToken;
   try {
-    decodedToken = jwt.verify(
-      rawToken,
-      process.env.APP_SECRET as string
-    ) as DecodedToken;
-  } catch (err) {
+    decodedToken = decodeJwt(rawToken);
+  } catch (error) {
     ctx.throw(401);
     return;
   }
