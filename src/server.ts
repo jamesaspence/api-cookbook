@@ -7,6 +7,11 @@ import router from './http/routes';
 import { boot } from './boot';
 import { AppContext } from './types';
 import helmet from 'koa-helmet';
+import {ApolloServer} from '@apollo/server';
+import * as http from 'http';
+import {koaMiddleware} from '@as-integrations/koa';
+import {ApolloServerPluginDrainHttpServer} from "@apollo/server/plugin/drainHttpServer";
+import {getUserFromAuthorizationHeader} from './service/jwt';
 
 config();
 
@@ -31,7 +36,27 @@ export const logger = winston.createLogger({
 
 export const app = new Application();
 
-boot().then(() => {
+boot().then(async () => {
+  const typeDefs = `#graphql
+    type Query {
+        hello: String
+    }
+  `;
+
+  const resolvers = {
+    Query: {
+      hello: () => 'world',
+    },
+  };
+
+  const httpServer = http.createServer(app.callback());
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
+  await apolloServer.start();
+
   // General error handler, convert errors to JSON payloads
   app.use((ctx: AppContext, next: Next): Promise<void> => {
     return next().catch(err => {
@@ -58,8 +83,19 @@ boot().then(() => {
 
   app.use(router.routes());
   app.use(router.allowedMethods());
+  app.use(koaMiddleware(apolloServer, {
+    context: async ({ ctx }) => {
+      try {
+        return {
+          user: await getUserFromAuthorizationHeader(ctx.header.authorization),
+        };
+      } catch (err: unknown) {
+        return { user: null };
+      }
+    },
+  }))
 
-  app.listen(port, () => {
+  httpServer.listen({ port }, () => {
     logger.debug(`Server listening at port ${port}`);
   });
 });
