@@ -5,7 +5,10 @@
   "repository": "https://github.com/jamesaspence/api-cookbook",
   "author": "James Spence <Jamesaspence20@gmail.com>",
   "license": "MIT",
-  "private": false,
+  "engines": {
+    "node": "18.12.1"
+  },
+  "engineStrict": true,
   "dependencies": {
     "@apollo/server": "^4.6.0",
     "@as-integrations/koa": "^0.3.0",
@@ -20,7 +23,6 @@
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.3.0",
     "koa-helmet": "^6.1.0",
-    "node": "^18.12",
     "pg": "^8.8.0",
     "winston": "^3.8.2"
   },
@@ -60,5 +62,6 @@
     "start:dist": "node ./dist/server.js",
     "test": "yarn jest",
     "test:ci": "yarn jest --ci"
-  }
+  },
+  "packageManager": "yarn@3.5.0"
 }
